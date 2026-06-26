@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minecraft Server Fullscreen Panel</title>
+    <!-- นำเข้า Font และ Icon สำหรับความสวยงาม -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Courier+New&display=swap" rel="stylesheet">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        
+        /* ตั้งค่า Body ให้ล็อกขนาดเท่าหน้าจอพอดี ไม่เกิดแถบเลื่อน (Scrollbar) ด้านนอก */
+        body { 
+            width: 100vw; 
+            height: 100vh; 
+            overflow: hidden; 
+            background-color: #0b0f19;
+            display: flex;
+        }
+
+        /* GIF พื้นหลัง ปรับขนาดเต็มจออัตโนมัติ ไม่บิดเบี้ยว */
+        #bg-gif {
+            position: fixed; 
+            top: 50%; 
+            left: 50%; 
+            width: 100vw; 
+            height: 100vh;
+            transform: translate(-50%, -50%);
+            object-fit: cover; 
+            object-position: center; 
+            z-index: -1; 
+            filter: brightness(0.4) blur(1px); 
+            pointer-events: none; 
+        }
+
+        /* ปรับปรุง: ตัว Container หลักขยายเต็มจอ 100% สไตล์ Full-screen Web App */
+        .panel-container {
+            display: flex; 
+            width: 100%; 
+            height: 100%; 
+            background: rgba(10, 16, 30, 0.8); /* เคลือบพื้นหลังกระจก */
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px); 
+            overflow: hidden;
+        }
+
+        /* Sidebar เมนูด้านซ้ายยืดสูงเต็มจอ */
+        .sidebar {
+            width: 260px; 
+            height: 100%;
+            background: rgba(7, 11, 20, 0.6);
+            border-right: 1px solid rgba(255, 255, 255, 0.05); 
+            padding: 35px 20px;
+            display: flex; 
+            flex-direction: column; 
+            gap: 40px;
+            flex-shrink: 0; /* ล็อกความกว้างของเมนูไว้ไม่ให้หดตัว */
+        }
+        .logo { display: flex; align-items: center; gap: 12px; font-size: 22px; font-weight: 700; color: #fff; }
+        .logo i { color: #4CAF50; font-size: 26px; }
+        .menu-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+        .menu-item {
+            display: flex; align-items: center; gap: 15px; padding: 14px 20px;
+            color: #7e8c9f; cursor: pointer; border-radius: 12px; font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        .menu-item:hover, .menu-item.active { color: #fff; background: rgba(255, 255, 255, 0.06); }
+        .menu-item.active { border-left: 4px solid #4CAF50; background: rgba(76, 175, 80, 0.15); color: #4CAF50; }
+
+        /* พื้นที่แสดงเนื้อหาหลักฝั่งขวา ขยายกว้าง-สูงเต็มจอที่เหลือ */
+        .content-area { 
+            flex: 1; 
+            height: 100%;
+            padding: 40px; 
+            overflow-y: auto; /* หากเนื้อหายาวเกินจอ จะเลื่อนขึ้นลงเฉพาะฝั่งนี้ */
+            color: #fff; 
+        }
+        
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tab-title { font-size: 26px; font-weight: 700; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        /* --- ปรับปรุง: ระบบการจัด Grid ด้านในให้ยืดหยุ่น (Responsive) พอดีจอ --- */
+        .grid-stats { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* ปรับคอลัมน์อัตโนมัติตามขนาดจอ */
+            gap: 20px; 
+            margin-bottom: 30px; 
+        }
+        .stat-card { background: rgba(20, 32, 55, 0.6); border: 1px solid rgba(255, 255, 255, 0.05); padding: 25px; border-radius: 16px; }
+        .stat-label { font-size: 12px; color: #7e8c9f; font-weight: 600; letter-spacing: 0.5px; display: block; margin-bottom: 8px; }
+        .stat-value { font-size: 26px; font-weight: 700; }
+        .status-badge { color: #2ecc71; background: rgba(46, 204, 113, 0.1); padding: 6px 16px; border-radius: 8px; font-size: 18px; font-weight: 600; display: inline-block; }
+        
+        .btn-group { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 35px; }
+        .btn { padding: 14px 28px; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 10px; color: white; transition: all 0.2s ease; }
+        .btn-start { background: #27ae60; } .btn-start:hover { background: #219653; transform: translateY(-2px); }
+        .btn-stop { background: #c0392b; } .btn-stop:hover { background: #ae3124; transform: translateY(-2px); }
+        .btn-restart { background: #2980b9; } .btn-restart:hover { background: #2472a4; transform: translateY(-2px); }
+
+        /* --- หน้า Console ล็อกความสูงพอดีจอ --- */
+        .terminal { background: #05070f; border-radius: 16px; padding: 20px; height: calc(100vh - 220px); min-height: 250px; overflow-y: auto; font-family: 'Courier New', monospace; font-size: 14px; color: #33ff33; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 15px; }
+        .terminal-line { margin-bottom: 6px; line-height: 1.4; }
+        .terminal-input-group { display: flex; background: #05070f; border-radius: 10px; padding: 12px; border: 1px solid rgba(255,255,255,0.1); }
+        .terminal-input-group span { color: #33ff33; margin-right: 10px; font-family: 'Courier New', monospace; }
+        .terminal-input { background: none; border: none; color: #fff; flex: 1; font-family: 'Courier New', monospace; outline: none; }
+
+        /* --- หน้า Players --- */
+        .table-responsive { width: 100%; overflow-x: auto; }
+        .player-table { width: 100%; border-collapse: collapse; background: rgba(20, 32, 55, 0.4); border-radius: 14px; overflow: hidden; }
+        .player-table th, .player-table td { padding: 15px 20px; text-align: left; }
+        .player-table th { background: rgba(7, 11, 20, 0.5); color: #7e8c9f; font-size: 13px; font-weight: 600; }
+        .player-table tr { border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .btn-kick { background: #e67e22; padding: 6px 12px; border: none; color: white; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; }
+        .btn-kick:hover { background: #d35400; }
+
+        /* --- หน้า Settings --- */
+        .settings-form { display: flex; flex-direction: column; gap: 20px; max-width: 600px; }
+        .form-group { display: flex; flex-direction: column; gap: 8px; }
+        .form-group label { font-size: 13px; color: #7e8c9f; font-weight: 500; }
+        .form-group input, .form-group select { background: rgba(20, 32, 55, 0.6); border: 1px solid rgba(255,255,255,0.1); padding: 12px; border-radius: 10px; color: white; outline: none; }
+
+        /* --- หน้า Plugins บีบกระจายแถวตามสัดส่วนหน้าจอ --- */
+        .plugin-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
+        .plugin-card { background: rgba(20, 32, 55, 0.5); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 16px; display: flex; justify-content: space-between; align-items: center; padding: 20px; gap: 15px; }
+        .plugin-info h4 { margin-bottom: 5px; font-size: 16px; }
+        .plugin-info p { font-size: 12px; color: #7e8c9f; line-height: 1.4; }
+        .btn-install { background: #4CAF50; border: none; color: white; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 13px; flex-shrink: 0; }
+        .btn-installed { background: rgba(255,255,255,0.1); color: #7e8c9f; }
+
+        /* แจ้งเตือน Toast */
+        .toast { position: fixed; bottom: 30px; right: 30px; background: #2ecc71; color: white; padding: 15px 30px; border-radius: 10px; font-weight: 600; box-shadow: 0 10px 20px rgba(0,0,0,0.3); display: none; animation: slideIn 0.3s ease; z-index: 999; }
+        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
+
+        /* สไตล์เสริมสำหรับหน้าจอมือถือ (ปรับขนาด Sidebar ให้หดอัตโนมัติ) */
+        @media (max-width: 768px) {
+            .panel-container { flex-direction: column; }
+            .sidebar { width: 100%; height: auto; padding: 20px; gap: 20px; }
+            .menu-list { flex-direction: row; overflow-x: auto; padding-bottom: 5px; }
+            .menu-item { padding: 10px 15px; font-size: 13px; white-space: nowrap; }
+            .menu-item.active { border-left: none; border-bottom: 3px solid #4CAF50; background: rgba(76, 175, 80, 0.1); }
+            .content-area { padding: 20px; }
+            .terminal { height: 300px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ดึงไฟล์ GIF พื้นหลังที่ตั้งชื่อว่า background.gif -->
+    <img src="background.gif" id="bg-gif" alt="Minecraft Background Animation">
+
+    <div class="panel-container">
+        <!-- Sidebar แถบเมนู -->
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fa-solid fa-cubes"></i>
+                <span>MC-PANEL</span>
+            </div>
+            <ul class="menu-list">
+                <li class="menu-item active" onclick="switchTab('dashboard', this)"><i class="fa-solid fa-chart-pie"></i> Dashboard</li>
+                <li class="menu-item" onclick="switchTab('console', this)"><i class="fa-solid fa-terminal"></i> Console</li>
+                <li class="menu-item" onclick="switchTab('players', this)"><i class="fa-solid fa-users"></i> Players</li>
+                <li class="menu-item" onclick="switchTab('settings', this)"><i class="fa-solid fa-gear"></i> Settings</li>
+                <li class="menu-item" onclick="switchTab('plugins', this)"><i class="fa-solid fa-puzzle-piece"></i> Plugins</li>
+            </ul>
+        </aside>
+
+        <!-- พื้นที่แสดงข้อมูลหลัก -->
+        <main class="content-area">
+            
+            <!-- แท็บ 1: DASHBOARD -->
+            <div id="dashboard" class="tab-content active">
+                <h1 class="tab-title">Server Dashboard</h1>
+                <div class="grid-stats">
+                    <div class="stat-card">
+                        <span class="stat-label">STATUS</span>
+                        <span id="srv-status" class="status-badge">ONLINE</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">ONLINE PLAYERS</span>
+                        <span id="srv-players" class="stat-value">3 / 100</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">PERFORMANCE</span>
+                        <span class="stat-value" style="font-size: 18px; color: #e67e22;"><i class="fa-solid fa-microchip"></i> CPU: 18% | <i class="fa-solid fa-memory"></i> RAM: 42%</span>
+                    </div>
+                </div>
+                <h3 class="stat-label" style="margin-bottom: 15px;">QUICK ACTIONS</h3>
+                <div class="btn-group">
+                    <button class="btn btn-start" onclick="triggerAction('start')"><i class="fa-solid fa-play"></i> START</button>
+                    <button class="btn btn-stop" onclick="triggerAction('stop')"><i class="fa-solid fa-stop"></i> STOP</button>
+                    <button class="btn btn-restart" onclick="triggerAction('restart')"><i class="fa-solid fa-rotate-right"></i> RESTART</button>
+                </div>
+            </div>
+
+            <!-- แท็บ 2: CONSOLE -->
+            <div id="console" class="tab-content">
+                <h1 class="tab-title">Server Console</h1>
+                <div class="terminal" id="terminal-box">
+                    <div class="terminal-line">[14:32:10 INFO]: Loading libraries, please wait...</div>
+                    <div class="terminal-line">[14:32:12 INFO]: Starting minecraft server version 1.20.1</div>
+                    <div class="terminal-line">[14:32:15 INFO]: Preparing level "world"</div>
+                    <div class="terminal-line">[14:32:18 INFO]: Done (5.4s)! For help, type "help"</div>
+                </div>
+                <div class="terminal-input-group">
+                    <span>></span>
+                    <input type="text" class="terminal-input" id="cmd-input" placeholder="พิมพ์คำสั่งที่นี่ เช่น /op หรือ /say..." onkeydown="sendConsoleCommand(event)">
+                </div>
+            </div>
+
+            <!-- แท็บ 3: PLAYERS -->
+            <div id="players" class="tab-content">
+                <h1 class="tab-title">Online Players</h1>
+                <div class="table-responsive">
+                    <table class="player-table">
+                        <thead>
+                            <tr><th>Avatar</th><th>Username</th><th>Ping</th><th>Action</th></tr>
+                        </thead>
+                        <tbody id="player-list-rows">
+                            <tr><td>👦</td><td>Steve_Pro</td><td>24ms</td><td><button class="btn-kick" onclick="kickPlayer(this, 'Steve_Pro')">KICK</button></td></tr>
+                            <tr><td>👧</td><td>Alex_Builder</td><td>45ms</td><td><button class="btn-kick" onclick="kickPlayer(this, 'Alex_Builder')">KICK</button></td></tr>
+                            <tr><td>🧙‍♂️</td><td>Creeper_Hunter</td><td>12ms</td><td><button class="btn-kick" onclick="kickPlayer(this, 'Creeper_Hunter')">KICK</button></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- แท็บ 4: SETTINGS -->
+            <div id="settings" class="tab-content">
+                <h1 class="tab-title">Server Settings</h1>
+                <div class="settings-form">
+                    <div class="form-group">
+                        <label>Server Name (Motd)</label>
+                        <input type="text" value="Welcome to My Awesome Server!">
+                    </div>
+                    <div class="form-group">
+                        <label>Max Players</label>
+                        <input type="number" value="100">
+                    </div>
+                    <div class="form-group">
+                        <label>Game Difficulty</label>
+                        <select>
+                            <option>Peaceful</option><option>Easy</option><option selected>Normal</option><option>Hard</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-start" style="width: fit-content; margin-top: 10px;" onclick="showToast('บันทึกการตั้งค่าเรียบร้อยแล้ว!')">SAVE SETTINGS</button>
+                </div>
+            </div>
+
+            <!-- แท็บ 5: PLUGINS -->
+            <div id="plugins" class="tab-content">
+                <h1 class="tab-title">Plugin Marketplace</h1>
+                <div class="plugin-grid">
+                    <div class="plugin-card">
+                        <div class="plugin-info"><h4>EssentialsX</h4><p>คำสั่งพื้นฐานจำเป็น /home /spawn /warp</p></div>
+                        <button class="btn-install" onclick="togglePlugin(this)">INSTALL</button>
+                    </div>
+                    <div class="plugin-card">
+                        <div class="plugin-info"><h4>WorldEdit</h4><p>เครื่องมือสร้างและวางบล็อกเสกแมพขนาดใหญ่</p></div>
+                        <button class="btn-install" onclick="togglePlugin(this)">INSTALL</button>
+                    </div>
+                    <div class="plugin-card">
+                        <div class="plugin-info"><h4>LuckPerms</h4><p>ระบบจัดการยศและสิทธิ์ผู้เล่นในเซิร์ฟเวอร์</p></div>
+                        <button class="btn-install" onclick="togglePlugin(this)">INSTALL</button>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- กล่องป๊อปอัปแจ้งเตือน -->
+    <div class="toast" id="toast-box">บันทึกสำเร็จ!</div>
+
+    <!-- สคริปต์ระบบทำงานเบื้องหลังจำลอง -->
+    <script>
+        function switchTab(tabId, element) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            element.classList.add('active');
+        }
+
+        const statusBadge = document.getElementById('srv-status');
+        const playersCount = document.getElementById('srv-players');
+        const termBox = document.getElementById('terminal-box');
+
+        function triggerAction(action) {
+            if (action === 'stop') {
+                statusBadge.innerText = 'OFFLINE';
+                statusBadge.style.color = '#e74c3c';
+                statusBadge.style.background = 'rgba(231, 76, 60, 0.1)';
+                playersCount.innerText = '0 / 0';
+                logConsole('SERVER', 'Stopping server...', '#ff4757');
+                logConsole('SERVER', 'Server stopped successfully.', '#ff4757');
+            } else if (action === 'start') {
+                statusBadge.innerText = 'ONLINE';
+                statusBadge.style.color = '#2ecc71';
+                statusBadge.style.background = 'rgba(46, 204, 113, 0.1)';
+                playersCount.innerText = '3 / 100';
+                logConsole('SERVER', 'Loading libraries and world...', '#2ecc71');
+                logConsole('SERVER', 'Server started on port 25565!', '#2ecc71');
+            } else if (action === 'restart') {
+                statusBadge.innerText = 'RESTARTING...';
+                statusBadge.style.color = '#f1c40f';
+                statusBadge.style.background = 'rgba(241, 196, 15, 0.1)';
+                logConsole('SERVER', 'Restarting server...', '#f1c40f');
+                setTimeout(() => { triggerAction('start'); }, 2000);
+            }
+        }
+
+        function logConsole(sender, text, color = '#33ff33') {
+            const time = new Date().toLocaleTimeString();
+            termBox.innerHTML += `<div class="terminal-line" style="color: ${color}">[${time} ${sender}]: ${text}</div>`;
+            termBox.scrollTop = termBox.scrollHeight;
+        }
+
+        function sendConsoleCommand(event) {
+            if (event.key === 'Enter') {
+                const input = document.getElementById('cmd-input');
+                if (input.value.trim() !== "") {
+                    logConsole('ADMIN', input.value, '#ffffff');
+                    setTimeout(() => { logConsole('CONSOLE', `Executed command [${input.value}] successfully.`); }, 500);
+                    input.value = "";
+                }
+            }
+        }
+
+        function kickPlayer(btn, username) {
+            if(confirm(`คุณต้องการเตะคุณ ${username} ใช่หรือไม่?`)) {
+                btn.closest('tr').remove();
+                logConsole('SERVER', `Player ${username} was kicked from the game.`, '#e67e22');
+                showToast(`เตะ ${username} ออกจากเซิร์ฟเวอร์แล้ว`);
+            }
+        }
+
+        function togglePlugin(btn) {
+            if (btn.classList.contains('btn-installed')) {
+                btn.classList.remove('btn-installed');
+                btn.innerText = 'INSTALL';
+                btn.style.background = '#4CAF50';
+                showToast('ถอนการติดตั้งปลั๊กอินเรียบร้อยแล้ว');
+            } else {
+                btn.classList.add('btn-installed');
+                btn.innerText = 'INSTALLED';
+                btn.style.background = 'rgba(255,255,255,0.1)';
+                showToast('ติดตั้งปลั๊กอินสำเร็จ!');
+            }
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast-box');
+            toast.innerText = message;
+            toast.style.display = 'block';
+            setTimeout(() => { toast.style.display = 'none'; }, 3000);
+        }
+    </script>
+</body>
+</html>
