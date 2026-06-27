@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minecraft Server Panel - Login & Dashboard</title>
+    <title>Minecraft Server Panel - All-In-One Command Center</title>
     <!-- นำเข้า Font และ Icon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Courier+New&display=swap" rel="stylesheet">
@@ -50,10 +50,8 @@
         }
 
         .login-box .logo { justify-content: center; margin-bottom: 30px; font-size: 26px; }
-        
         .input-group { text-align: left; margin-bottom: 20px; }
         .input-group label { font-size: 13px; color: #7e8c9f; font-weight: 500; display: block; margin-bottom: 8px; }
-        
         .input-wrapper { position: relative; display: flex; align-items: center; }
         .input-wrapper i { position: absolute; left: 15px; color: #52637a; font-size: 16px; }
         .input-wrapper input {
@@ -62,28 +60,18 @@
             transition: all 0.3s;
         }
         .input-wrapper input:focus { border-color: #4CAF50; box-shadow: 0 0 12px rgba(76, 175, 80, 0.25); background: rgba(7, 11, 20, 0.8); }
-
-        /* ตัวเลือกจดจำฉัน */
         .remember-group { display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px; font-size: 13px; color: #7e8c9f; }
         .checkbox-container { display: flex; align-items: center; gap: 8px; cursor: pointer; user-select: none; }
         .checkbox-container input { cursor: pointer; accent-color: #4CAF50; width: 16px; height: 16px; }
-
-        .btn-login {
-            width: 100%; padding: 14px; background: #4CAF50; border: none; color: white;
-            font-size: 16px; font-weight: 600; border-radius: 12px; cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-        }
+        .btn-login { width: 100%; padding: 14px; background: #4CAF50; border: none; color: white; font-size: 16px; font-weight: 600; border-radius: 12px; cursor: pointer; transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1); }
         .btn-login:hover { transform: translateY(-2px); filter: brightness(1.1); box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3); }
-        .btn-login:active { transform: translateY(1px) scale(0.98); }
-
-        /* อนิเมชั่นล็อกอินผ่านหน้าจอหายไป */
         .login-fadeout { opacity: 0; transform: scale(1.05); pointer-events: none; }
 
         /* ==========================================================================
-           🎨 สไตล์หน้าหลัก DASHBOARD (ซ่อนไว้เริ่มต้น)
+           🎨 เลย์เอาต์หน้าหลักแผงควบคุม
            ========================================================================== */
         .panel-container {
-            display: none; /* ควบคุมด้วย JS */
+            display: none; 
             width: 100%; height: 100%; 
             background: rgba(10, 16, 30, 0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); 
             overflow: hidden;
@@ -108,72 +96,102 @@
         }
         .menu-item:hover { color: #fff; background: rgba(255, 255, 255, 0.05); transform: translateX(6px); }
         .menu-item.active { color: #4CAF50; background: rgba(76, 175, 80, 0.12); font-weight: 600; border-left: 4px solid #4CAF50; padding-left: 16px; }
-
-        /* ปุ่มออกจากระบบท้ายเมนู */
         .btn-logout { color: #e74c3c; background: rgba(231, 76, 60, 0.05); border: 1px solid rgba(231, 76, 60, 0.1); }
         .btn-logout:hover { color: #fff; background: #e74c3c; transform: translateX(0) scale(0.98); }
 
-        .content-area { flex: 1; height: 100%; padding: 40px; overflow-y: auto; color: #fff; }
+        .content-area { flex: 1; height: 100%; padding: 35px 40px; overflow-y: auto; color: #fff; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
+        
+        /* สไลด์เด้งขึ้นเมื่อเปิดแท็บ */
         .tab-content.active > * { animation: slideUpFade 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
-        .tab-content.active > *:nth-child(1) { animation-delay: 0.05s; }
-        .tab-content.active > *:nth-child(2) { animation-delay: 0.12s; }
-        .tab-content.active > *:nth-child(3) { animation-delay: 0.2s; }
+        .tab-content.active > *:nth-child(1) { animation-delay: 0.03s; }
+        .tab-content.active > *:nth-child(2) { animation-delay: 0.08s; }
+        .tab-content.active > *:nth-child(3) { animation-delay: 0.15s; }
+        .tab-content.active > *:nth-child(4) { animation-delay: 0.22s; }
 
         @keyframes slideUpFade {
-            from { opacity: 0; transform: translateY(25px); filter: blur(2px); }
+            from { opacity: 0; transform: translateY(20px); filter: blur(2px); }
             to { opacity: 1; transform: translateY(0); filter: blur(0); }
         }
 
-        .tab-title { font-size: 26px; font-weight: 700; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .tab-title { font-size: 26px; font-weight: 700; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 0.5px; }
 
         /* การ์ดสถิติ */
-        .grid-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 30px; }
-        .stat-card { background: rgba(20, 32, 55, 0.5); border: 1px solid rgba(255, 255, 255, 0.05); padding: 25px; border-radius: 16px; transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
-        .stat-card:hover { transform: translateY(-8px); background: rgba(28, 44, 76, 0.7); border-color: rgba(76, 175, 80, 0.3); box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4); }
-        .stat-label { font-size: 12px; color: #7e8c9f; font-weight: 600; letter-spacing: 0.5px; display: block; margin-bottom: 8px; }
-        .stat-value { font-size: 26px; font-weight: 700; transition: color 0.3s; }
+        .grid-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 25px; }
+        .stat-card { background: rgba(20, 32, 55, 0.5); border: 1px solid rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 16px; transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
+        .stat-card:hover { transform: translateY(-5px); background: rgba(28, 44, 76, 0.7); border-color: rgba(76, 175, 80, 0.3); box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4); }
+        .stat-label { font-size: 11px; color: #7e8c9f; font-weight: 600; letter-spacing: 0.5px; display: block; margin-bottom: 6px; }
+        .stat-value { font-size: 22px; font-weight: 700; transition: color 0.3s; }
         .stat-card:hover .stat-value { color: #4CAF50; }
 
         /* ป้ายสถานะกะพริบ */
-        .status-badge { padding: 6px 16px; border-radius: 8px; font-size: 18px; font-weight: 600; display: inline-block; transition: all 0.4s ease; }
+        .status-badge { padding: 4px 14px; border-radius: 8px; font-size: 16px; font-weight: 600; display: inline-block; }
         .badge-online { color: #2ecc71; background: rgba(46, 204, 113, 0.1); animation: pulseGreen 2s infinite; }
         .badge-offline { color: #e74c3c; background: rgba(231, 76, 60, 0.1); animation: pulseRed 2s infinite; }
         .badge-process { color: #f1c40f; background: rgba(241, 196, 15, 0.1); animation: pulseYellow 2s infinite; }
-
-        @keyframes pulseGreen { 0% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(46, 204, 113, 0); } 100% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0); } }
-        @keyframes pulseRed { 0% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(231, 76, 60, 0); } 100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); } }
-        @keyframes pulseYellow { 0% { box-shadow: 0 0 0 0 rgba(241, 196, 15, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(241, 196, 15, 0); } 100% { box-shadow: 0 0 0 0 rgba(241, 196, 15, 0); } }
+        @keyframes pulseGreen { 0% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.4); } 70% { box-shadow: 0 0 0 8px rgba(46, 204, 113, 0); } 100% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0); } }
+        @keyframes pulseRed { 0% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.4); } 70% { box-shadow: 0 0 0 8px rgba(231, 76, 60, 0); } 100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); } }
+        @keyframes pulseYellow { 0% { box-shadow: 0 0 0 0 rgba(241, 196, 15, 0.4); } 70% { box-shadow: 0 0 0 8px rgba(241, 196, 15, 0); } 100% { box-shadow: 0 0 0 0 rgba(241, 196, 15, 0); } }
         
         /* ปุ่มจัดการ */
-        .btn-group { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 35px; }
-        .btn { padding: 14px 28px; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 10px; color: white; transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1); }
-        .btn:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.3); filter: brightness(1.15); }
+        .btn-group { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 30px; }
+        .btn { padding: 12px 24px; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 10px; color: white; transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1); }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.3); filter: brightness(1.15); }
         .btn:active { transform: translateY(1px) scale(0.97); }
         .btn-start { background: #27ae60; } .btn-stop { background: #c0392b; } .btn-restart { background: #2980b9; }
         .btn-restart.spinning i { animation: spinFast 1s linear infinite; }
         @keyframes spinFast { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-        /* Console */
-        .terminal { background: #05070f; border-radius: 16px; padding: 20px; height: calc(100vh - 220px); min-height: 250px; overflow-y: auto; font-family: 'Courier New', monospace; font-size: 14px; color: #33ff33; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 15px; }
-        .terminal-line { margin-bottom: 6px; line-height: 1.4; animation: logEntry 0.25s ease-out both; }
-        @keyframes logEntry { from { opacity: 0; transform: translateX(-15px); } to { opacity: 1; transform: translateX(0); } }
-        .terminal-input-group { display: flex; background: #05070f; border-radius: 10px; padding: 12px; border: 1px solid rgba(255,255,255,0.1); transition: border-color 0.3s; }
-        .terminal-input-group:focus-within { border-color: #33ff33; }
-        .terminal-input { background: none; border: none; color: #fff; flex: 1; font-family: 'Courier New', monospace; outline: none; }
+        /* ==========================================================================
+           ⚡ ครอปจัดแถวแบ่งครึ่ง Console & Players (Command Center Grid)
+           ========================================================================== */
+        .dashboard-split-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr; /* สัดส่วนซ้ายกว้างกว่าขวานิดหน่อยเพื่อความสวยงาม */
+            gap: 25px;
+            align-items: start;
+        }
+        
+        .section-box {
+            background: rgba(15, 23, 42, 0.4);
+            border: 1px solid rgba(255,255,255,0.04);
+            border-radius: 18px;
+            padding: 22px;
+        }
+        .section-subtitle {
+            font-size: 13px; color: #7e8c9f; font-weight: 600; letter-spacing: 0.5px;
+            margin-bottom: 15px; display: flex; align-items: center; gap: 8px; text-transform: uppercase;
+        }
+        .section-subtitle i { color: #4CAF50; }
 
-        /* ตารางและอื่นๆ */
-        .table-responsive { width: 100%; overflow-x: auto; }
-        .player-table { width: 100%; border-collapse: collapse; background: rgba(20, 32, 55, 0.4); border-radius: 14px; overflow: hidden; }
-        .player-table th, .player-table td { padding: 15px 20px; text-align: left; }
-        .player-table th { background: rgba(7, 11, 20, 0.5); color: #7e8c9f; font-size: 13px; font-weight: 600; }
-        .player-table tr { border-bottom: 1px solid rgba(255,255,255,0.05); transition: background 0.3s; }
-        .player-table tbody tr:hover { background: rgba(255,255,255,0.03); }
-        .btn-kick { background: #e67e22; padding: 6px 12px; border: none; color: white; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; transition: all 0.2s; }
+        /* สไตล์หน้าต่าง Console */
+        .terminal { background: #05070f; border-radius: 12px; padding: 15px; height: 320px; overflow-y: auto; font-family: 'Courier New', monospace; font-size: 13px; color: #33ff33; border: 1px solid rgba(255,255,255,0.03); margin-bottom: 12px; }
+        .terminal-line { margin-bottom: 5px; line-height: 1.4; animation: logEntry 0.2s ease-out both; }
+        @keyframes logEntry { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+        .terminal-input-group { display: flex; background: #05070f; border-radius: 10px; padding: 12px; border: 1px solid rgba(255,255,255,0.08); transition: border-color 0.3s; }
+        .terminal-input-group:focus-within { border-color: #33ff33; }
+        .terminal-input { background: none; border: none; color: #fff; flex: 1; font-family: 'Courier New', monospace; outline: none; font-size: 13px; }
+
+        /* สไตล์ตารางผู้เล่นออนไลน์ */
+        .table-responsive { width: 100%; height: 377px; overflow-y: auto; } /* คุมความสูงให้เท่ากล่องคอนโซลพอดี */
+        .player-table { width: 100%; border-collapse: collapse; }
+        .player-table th, .player-table td { padding: 12px 14px; text-align: left; vertical-align: middle; }
+        .player-table th { background: rgba(7, 11, 20, 0.4); color: #7e8c9f; font-size: 12px; font-weight: 600; position: sticky; top: 0; z-index: 10; }
+        .player-table tr { border-bottom: 1px solid rgba(255,255,255,0.03); }
+        .player-table tbody tr:hover { background: rgba(255,255,255,0.02); }
+        
+        .player-avatar { width: 32px; height: 32px; border-radius: 6px; image-rendering: pixelated; box-shadow: 0 4px 8px rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); transition: transform 0.3s; }
+        .player-table tr:hover .player-avatar { transform: scale(1.15) rotate(5deg); }
+        
+        .player-name-wrapper { display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 14px; }
+        .heart-effect { color: #ff4757; font-size: 12px; display: inline-block; animation: heartBeat 1.2s infinite cubic-bezier(0.215, 0.610, 0.355, 1); filter: drop-shadow(0 0 4px rgba(255, 71, 87, 0.7)); }
+        @keyframes heartBeat { 0%, 80%, 100% { transform: scale(1); } 20%, 60% { transform: scale(1.25); } 40% { transform: scale(1.1); } }
+
+        .btn-kick { background: #e67e22; padding: 5px 10px; border: none; color: white; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 600; transition: all 0.2s; }
         .btn-kick:hover { background: #d35400; transform: scale(1.05); }
         .player-row-fadeout { animation: rowFade 0.4s ease forwards; }
-        @keyframes rowFade { to { opacity: 0; transform: translateX(50px); display: none; } }
+        @keyframes rowFade { to { opacity: 0; transform: translateX(40px); display: none; } }
 
         /* Settings & Plugins */
         .settings-form { display: flex; flex-direction: column; gap: 20px; max-width: 600px; }
@@ -181,6 +199,7 @@
         .form-group label { font-size: 13px; color: #7e8c9f; font-weight: 500; }
         .form-group input, .form-group select { background: rgba(20, 32, 55, 0.6); border: 1px solid rgba(255,255,255,0.1); padding: 12px; border-radius: 10px; color: white; outline: none; transition: all 0.3s; }
         .form-group input:focus, .form-group select:focus { border-color: #4CAF50; background: rgba(255,255,255,0.05); box-shadow: 0 0 10px rgba(76, 175, 80, 0.2); }
+        
         .plugin-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
         .plugin-card { background: rgba(20, 32, 55, 0.5); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 16px; display: flex; justify-content: space-between; align-items: center; padding: 20px; gap: 15px; transition: all 0.3s ease; }
         .plugin-card:hover { transform: scale(1.02); background: rgba(255,255,255,0.03); border-color: rgba(255,255,255,0.15); }
@@ -195,6 +214,11 @@
         .toast-out { animation: toastOut 0.3s ease forwards !important; }
         @keyframes toastOut { to { transform: translateY(30px); opacity: 0; } }
 
+        /* ตอบสนองหน้าจอ */
+        @media (max-width: 1100px) {
+            .dashboard-split-grid { grid-template-columns: 1fr; }
+            .table-responsive { height: 300px; }
+        }
         @media (max-width: 768px) {
             .panel-container { flex-direction: column; }
             .sidebar { width: 100%; height: auto; padding: 20px; gap: 20px; }
@@ -204,7 +228,6 @@
             .menu-item:hover { transform: none; }
             .menu-item.active { border-left: none; border-bottom: 3px solid #4CAF50; background: rgba(76, 175, 80, 0.1); }
             .content-area { padding: 20px; }
-            .terminal { height: 300px; }
         }
     </style>
 </head>
@@ -213,158 +236,131 @@
     <!-- รูปพื้นหลัง GIF -->
     <img src="background.gif" id="bg-gif" alt="Minecraft Background Animation">
 
-    <!-- ==========================================================================
-       🖥️ หน้าจอเข้าสู่ระบบ (Login Screen)
-       ========================================================================== -->
+    <!-- 🖥️ หน้าจอเข้าสู่ระบบ -->
     <div class="login-container" id="login-screen">
         <div class="login-box">
-            <div class="logo">
-                <i class="fa-solid fa-gear"></i>
-                <span>MC-PANEL</span>
-            </div>
+            <div class="logo"><i class="fa-solid fa-gear"></i> <span>MC-PANEL</span></div>
             <form onsubmit="handleLogin(event)">
                 <div class="input-group">
                     <label>USERNAME</label>
-                    <div class="input-wrapper">
-                        <i class="fa-solid fa-user"></i>
-                        <input type="text" id="username" placeholder="ระบุชื่อผู้ใช้งาน" required>
-                    </div>
+                    <div class="input-wrapper"><i class="fa-solid fa-user"></i> <input type="text" id="username" value="admin" required></div>
                 </div>
                 <div class="input-group">
                     <label>PASSWORD</label>
-                    <div class="input-wrapper">
-                        <i class="fa-solid fa-lock"></i>
-                        <input type="password" id="password" placeholder="ระบุรหัสผ่าน" required>
-                    </div>
+                    <div class="input-wrapper"><i class="fa-solid fa-lock"></i> <input type="password" id="password" value="123456" required></div>
                 </div>
-                <div class="remember-group">
-                    <label class="checkbox-container">
-                        <input type="checkbox" id="remember-me"> จดจำการเข้าระบบไว้
-                    </label>
-                </div>
+                <div class="remember-group"><label class="checkbox-container"><input type="checkbox" id="remember-me"> จดจำการเข้าระบบไว้</label></div>
                 <button type="submit" class="btn-login">SIGN IN</button>
             </form>
         </div>
     </div>
 
-    <!-- ==========================================================================
-       🖥️ หน้าจอหลักแผงควบคุม (Main Panel)
-       ========================================================================== -->
+    <!-- 🖥️ หน้าจอหลักแผงควบคุม (ไซด์บาร์กระชับขึ้น) -->
     <div class="panel-container" id="main-panel">
         <aside class="sidebar">
             <div class="sidebar-top">
-                <div class="logo">
-                    <i class="fa-solid fa-gear"></i>
-                    <span>MC-PANEL</span>
-                </div>
+                <div class="logo"><i class="fa-solid fa-gear"></i> <span>MC-PANEL</span></div>
                 <ul class="menu-list">
                     <li class="menu-item active" onclick="switchTab('dashboard', this)"><i class="fa-solid fa-chart-pie"></i> Dashboard</li>
-                    <li class="menu-item" onclick="switchTab('console', this)"><i class="fa-solid fa-terminal"></i> Console</li>
-                    <li class="menu-item" onclick="switchTab('players', this)"><i class="fa-solid fa-users"></i> Players</li>
                     <li class="menu-item" onclick="switchTab('settings', this)"><i class="fa-solid fa-gear"></i> Settings</li>
                     <li class="menu-item" onclick="switchTab('plugins', this)"><i class="fa-solid fa-puzzle-piece"></i> Plugins</li>
                 </ul>
             </div>
-            <!-- ปุ่มกดออกระบบด้านล่างไซด์บาร์ -->
             <button class="menu-item btn-logout" onclick="handleLogout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
         </aside>
 
         <main class="content-area">
-            <!-- แท็บ 1: DASHBOARD -->
+            
+            <!-- แท็บ 1: DASHBOARD (เวอร์ชันรวมร่างเทพ All-In-One) -->
             <div id="dashboard" class="tab-content active">
-                <h1 class="tab-title">Server Dashboard</h1>
+                <h1 class="tab-title">Server Command Center</h1>
+                
+                <!-- แถวสถิติสถานะ -->
                 <div class="grid-stats">
-                    <div class="stat-card">
-                        <span class="stat-label">STATUS</span>
-                        <span id="srv-status" class="status-badge badge-online">ONLINE</span>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-label">ONLINE PLAYERS</span>
-                        <span id="srv-players" class="stat-value">3 / 100</span>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-label">PERFORMANCE</span>
-                        <span class="stat-value" style="font-size: 18px; color: #e67e22;"><i class="fa-solid fa-microchip"></i> CPU: 18% | <i class="fa-solid fa-memory"></i> RAM: 42%</span>
-                    </div>
+                    <div class="stat-card"><span class="stat-label">STATUS</span><span id="srv-status" class="status-badge badge-online">ONLINE</span></div>
+                    <div class="stat-card"><span class="stat-label">ONLINE PLAYERS</span><span id="srv-players" class="stat-value">3 / 100</span></div>
+                    <div class="stat-card"><span class="stat-label">PERFORMANCE</span><span class="stat-value" style="font-size: 16px; color: #e67e22;"><i class="fa-solid fa-microchip"></i> CPU: 18% | <i class="fa-solid fa-memory"></i> RAM: 42%</span></div>
                 </div>
-                <h3 class="stat-label" style="margin-bottom: 15px;">QUICK ACTIONS</h3>
+
+                <!-- แถวปุ่มคำสั่งควบคุม -->
+                <h3 class="stat-label" style="margin-bottom: 12px;">QUICK ACTIONS</h3>
                 <div class="btn-group">
                     <button class="btn btn-start" onclick="triggerAction('start')"><i class="fa-solid fa-play"></i> START</button>
                     <button class="btn btn-stop" onclick="triggerAction('stop')"><i class="fa-solid fa-stop"></i> STOP</button>
                     <button id="btn-restart-id" class="btn btn-restart" onclick="triggerAction('restart')"><i class="fa-solid fa-rotate-right"></i> RESTART</button>
                 </div>
+
+                <!-- 💥 รวมร่างแบ่งฝั่งซ้าย-ขวา Console & Players -->
+                <div class="dashboard-split-grid">
+                    
+                    <!-- ส่วน Console (ซ้าย) -->
+                    <div class="section-box">
+                        <h4 class="section-subtitle"><i class="fa-solid fa-terminal"></i> Live Terminal Console</h4>
+                        <div class="terminal" id="terminal-box">
+                            <div class="terminal-line">[14:32:10 INFO]: Loading libraries, please wait...</div>
+                            <div class="terminal-line">[14:32:12 INFO]: Starting minecraft server version 1.20.1</div>
+                            <div class="terminal-line">[14:32:15 INFO]: Preparing level "world"</div>
+                            <div class="terminal-line">[14:32:18 INFO]: Done (5.4s)! For help, type "help"</div>
+                        </div>
+                        <div class="terminal-input-group">
+                            <span>></span>
+                            <input type="text" class="terminal-input" id="cmd-input" placeholder="พิมพ์คำสั่งหลังบ้านแล้วกด Enter..." onkeydown="sendConsoleCommand(event)">
+                        </div>
+                    </div>
+
+                    <!-- ส่วน Players (ขวา) -->
+                    <div class="section-box">
+                        <h4 class="section-subtitle"><i class="fa-solid fa-users"></i> Connected Players</h4>
+                        <div class="table-responsive">
+                            <table class="player-table">
+                                <thead>
+                                    <tr><th>Avatar</th><th>Username</th><th>Ping</th><th>Action</th></tr>
+                                </thead>
+                                <tbody id="player-list-rows">
+                                    <tr>
+                                        <td><img src="https://minotar.net/avatar/Steve/32" class="player-avatar" alt="Steve"></td>
+                                        <td><div class="player-name-wrapper">Steve_Pro <span class="heart-effect"><i class="fa-solid fa-heart"></i></span></div></td>
+                                        <td>24ms</td>
+                                        <td><button class="btn-kick" onclick="kickPlayer(this, 'Steve_Pro')">KICK</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><img src="https://minotar.net/avatar/Alex/32" class="player-avatar" alt="Alex"></td>
+                                        <td><div class="player-name-wrapper">Alex_Builder <span class="heart-effect"><i class="fa-solid fa-heart"></i></span></div></td>
+                                        <td>45ms</td>
+                                        <td><button class="btn-kick" onclick="kickPlayer(this, 'Alex_Builder')">KICK</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><img src="https://minotar.net/avatar/Notch/32" class="player-avatar" alt="Notch"></td>
+                                        <td><div class="player-name-wrapper">Notch_Legacy <span class="heart-effect"><i class="fa-solid fa-heart"></i></span></div></td>
+                                        <td>12ms</td>
+                                        <td><button class="btn-kick" onclick="kickPlayer(this, 'Notch_Legacy')">KICK</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
             </div>
 
-            <!-- แท็บ 2: CONSOLE -->
-            <div id="console" class="tab-content">
-                <h1 class="tab-title">Server Console</h1>
-                <div class="terminal" id="terminal-box">
-                    <div class="terminal-line">[14:32:10 INFO]: Loading libraries, please wait...</div>
-                    <div class="terminal-line">[14:32:12 INFO]: Starting minecraft server version 1.20.1</div>
-                    <div class="terminal-line">[14:32:15 INFO]: Preparing level "world"</div>
-                    <div class="terminal-line">[14:32:18 INFO]: Done (5.4s)! For help, type "help"</div>
-                </div>
-                <div class="terminal-input-group">
-                    <span>></span>
-                    <input type="text" class="terminal-input" id="cmd-input" placeholder="พิมพ์คำสั่ง..." onkeydown="sendConsoleCommand(event)">
-                </div>
-            </div>
-
-            <!-- แท็บ 3: PLAYERS -->
-            <div id="players" class="tab-content">
-                <h1 class="tab-title">Online Players</h1>
-                <div class="table-responsive">
-                    <table class="player-table">
-                        <thead>
-                            <tr><th>Avatar</th><th>Username</th><th>Ping</th><th>Action</th></tr>
-                        </thead>
-                        <tbody id="player-list-rows">
-                            <tr><td>👦</td><td>Steve_Pro</td><td>24ms</td><td><button class="btn-kick" onclick="kickPlayer(this, 'Steve_Pro')">KICK</button></td></tr>
-                            <tr><td>👧</td><td>Alex_Builder</td><td>45ms</td><td><button class="btn-kick" onclick="kickPlayer(this, 'Alex_Builder')">KICK</button></td></tr>
-                            <tr><td>🧙‍♂️</td><td>Creeper_Hunter</td><td>12ms</td><td><button class="btn-kick" onclick="kickPlayer(this, 'Creeper_Hunter')">KICK</button></td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- แท็บ 4: SETTINGS -->
+            <!-- แท็บ 2: SETTINGS -->
             <div id="settings" class="tab-content">
                 <h1 class="tab-title">Server Settings</h1>
                 <div class="settings-form">
-                    <div class="form-group">
-                        <label>Server Name (Motd)</label>
-                        <input type="text" value="Welcome to My Awesome Server!">
-                    </div>
-                    <div class="form-group">
-                        <label>Max Players</label>
-                        <input type="number" value="100">
-                    </div>
-                    <div class="form-group">
-                        <label>Game Difficulty</label>
-                        <select>
-                            <option>Peaceful</option><option>Easy</option><option selected>Normal</option><option>Hard</option>
-                        </select>
-                    </div>
+                    <div class="form-group"><label>Server Name (Motd)</label><input type="text" value="Welcome to My Awesome Server!"></div>
+                    <div class="form-group"><label>Max Players</label><input type="number" value="100"></div>
+                    <div class="form-group"><label>Game Difficulty</label><select><option>Peaceful</option><option>Easy</option><option selected>Normal</option><option>Hard</option></select></div>
                     <button class="btn btn-start" style="width: fit-content; margin-top: 10px;" onclick="showToast('บันทึกการตั้งค่าเรียบร้อยแล้ว!')">SAVE SETTINGS</button>
                 </div>
             </div>
 
-            <!-- แท็บ 5: PLUGINS -->
+            <!-- แท็บ 3: PLUGINS -->
             <div id="plugins" class="tab-content">
                 <h1 class="tab-title">Plugin Marketplace</h1>
                 <div class="plugin-grid">
-                    <div class="plugin-card">
-                        <div class="plugin-info"><h4>EssentialsX</h4><p>คำสั่งพื้นฐานจำเป็น /home /spawn /warp</p></div>
-                        <button class="btn-install" onclick="togglePlugin(this)">INSTALL</button>
-                    </div>
-                    <div class="plugin-card">
-                        <div class="plugin-info"><h4>WorldEdit</h4><p>เครื่องมือสร้างและวางบล็อกเสกแมพขนาดใหญ่</p></div>
-                        <button class="btn-install" onclick="togglePlugin(this)">INSTALL</button>
-                    </div>
-                    <div class="plugin-card">
-                        <div class="plugin-info"><h4>LuckPerms</h4><p>ระบบจัดการยศและสิทธิ์ผู้เล่นในเซิร์ฟเวอร์</p></div>
-                        <button class="btn-install" onclick="togglePlugin(this)">INSTALL</button>
-                    </div>
+                    <div class="plugin-card"><div class="plugin-info"><h4>EssentialsX</h4><p>คำสั่งพื้นฐานจำเป็น /home /spawn /warp</p></div><button class="btn-install" onclick="togglePlugin(this)">INSTALL</button></div>
+                    <div class="plugin-card"><div class="plugin-info"><h4>WorldEdit</h4><p>เครื่องมือสร้างและวางบล็อกเสกแมพขนาดใหญ่</p></div><button class="btn-install" onclick="togglePlugin(this)">INSTALL</button></div>
+                    <div class="plugin-card"><div class="plugin-info"><h4>LuckPerms</h4><p>ระบบจัดการยศและสิทธิ์ผู้เล่นในเซิร์ฟเวอร์</p></div><button class="btn-install" onclick="togglePlugin(this)">INSTALL</button></div>
                 </div>
             </div>
         </main>
@@ -372,87 +368,42 @@
 
     <div class="toast" id="toast-box">บันทึกสำเร็จ!</div>
 
-    <!-- ==========================================================================
-       ⚙️ ระบบความคุม LOGIC JAVASCRIPT
-       ========================================================================== -->
     <script>
-        // ตรวจสอบข้อมูลเมื่อเปิดเว็บขึ้นมา (ระบบจำการเข้าระบบอัตโนมัติ)
+        // ระบบจำค่าล็อกอิน
         window.addEventListener('DOMContentLoaded', () => {
             const isRemembered = localStorage.getItem('mc_remember_me') === 'true';
             const isLoggedInLocal = localStorage.getItem('mc_is_logged_in') === 'true';
             const isLoggedInSession = sessionStorage.getItem('mc_is_logged_in') === 'true';
-
-            // ถ้าติ๊ก "จดจำฉัน" และเคยล็อกอินแล้ว หรือเข้าผ่าน Session ที่แท็บยังเปิดอยู่
-            if ((isRemembered && isLoggedInLocal) || isLoggedInSession) {
-                skipToDashboard();
-            }
+            if ((isRemembered && isLoggedInLocal) || isLoggedInSession) { skipToDashboard(); }
         });
 
-        // ฟังก์ชันระบบล็อกอิน
         function handleLogin(event) {
             event.preventDefault();
             const userInp = document.getElementById('username').value.trim();
             const passInp = document.getElementById('password').value.trim();
             const rememberCheckbox = document.getElementById('remember-me').checked;
-
-            // ⚠️ กำหนดรหัสผ่านตรงนี้ (เปลี่ยนตามใจชอบได้เลยครับ)
-            const correctUser = "admin";
-            const correctPass = "123456";
-
-            if (userInp === correctUser && passInp === correctPass) {
-                if (rememberCheckbox) {
-                    // บันทึกลงคอมถาวร (ปิดบราวเซอร์เปิดใหม่ก็ไม่หลุด)
-                    localStorage.setItem('mc_remember_me', 'true');
-                    localStorage.setItem('mc_is_logged_in', 'true');
-                } else {
-                    // บันทึกเฉพาะเซสชั่น (ปิดแท็บเมื่อไหร่หลุดล็อกอินทันที)
-                    localStorage.setItem('mc_remember_me', 'false');
-                    sessionStorage.setItem('mc_is_logged_in', 'true');
-                }
-                
-                // เอฟเฟกต์เฟดเปลี่ยนหน้าจอ
+            if (userInp === "admin" && passInp === "123456") {
+                if (rememberCheckbox) { localStorage.setItem('mc_remember_me', 'true'); localStorage.setItem('mc_is_logged_in', 'true'); }
+                else { localStorage.setItem('mc_remember_me', 'false'); sessionStorage.setItem('mc_is_logged_in', 'true'); }
                 const loginScreen = document.getElementById('login-screen');
                 loginScreen.classList.add('login-fadeout');
-                setTimeout(() => {
-                    loginScreen.style.display = 'none';
-                    document.getElementById('main-panel').style.display = 'flex';
-                    showToast('เข้าสู่ระบบสำเร็จ ยินดีต้อนรับครับ!');
-                }, 400);
-
+                setTimeout(() => { loginScreen.style.display = 'none'; document.getElementById('main-panel').style.display = 'flex'; showToast('เข้าสู่ระบบสำเร็จ ยินดีต้อนรับครับ!'); }, 400);
             } else {
-                // แจ้งเตือนถ้ารหัสผิด
-                showToast('❌ ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง!');
-                const box = document.querySelector('.login-box');
-                box.style.animation = 'none';
+                showToast('❌ รหัสผ่านไม่ถูกต้อง!');
+                const box = document.querySelector('.login-box'); box.style.animation = 'none';
                 setTimeout(() => { box.style.animation = 'loginIntro 0.3s ease'; }, 10);
             }
         }
 
-        // ฟังก์ชันล็อกเอาต์ออกจากระบบ
         function handleLogout() {
             if(confirm('คุณต้องการออกจากระบบใช่หรือไม่?')) {
-                localStorage.removeItem('mc_is_logged_in');
-                sessionStorage.removeItem('mc_is_logged_in');
-                
-                showToast('ออกจากระบบเรียบร้อยแล้ว');
-                setTimeout(() => {
-                    location.reload(); // รีเฟรชหน้าเว็บกลับไปล็อกอินใหม่
-                }, 1000);
+                localStorage.removeItem('mc_is_logged_in'); sessionStorage.removeItem('mc_is_logged_in');
+                showToast('ออกจากระบบเรียบร้อยแล้ว'); setTimeout(() => { location.reload(); }, 1000);
             }
         }
 
-        function skipToDashboard() {
-            document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('main-panel').style.display = 'flex';
-        }
-
-        // --- ระบบจำลองฟังก์ชันเว็บภายในแผงควบคุมหลักเดิม ---
-        function switchTab(tabId, element) {
-            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-            element.classList.add('active');
-        }
+        function skipToDashboard() { document.getElementById('login-screen').style.display = 'none'; document.getElementById('main-panel').style.display = 'flex'; }
+        function switchTab(tabId, element) { document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active')); document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active')); document.getElementById(tabId).classList.add('active'); element.classList.add('active'); }
 
         const statusBadge = document.getElementById('srv-status');
         const playersCount = document.getElementById('srv-players');
@@ -460,37 +411,15 @@
         const restartBtn = document.getElementById('btn-restart-id');
 
         function triggerAction(action) {
-            statusBadge.className = 'status-badge'; 
-            restartBtn.classList.remove('spinning');
-            if (action === 'stop') {
-                statusBadge.innerText = 'OFFLINE'; statusBadge.classList.add('badge-offline'); playersCount.innerText = '0 / 0';
-                logConsole('SERVER', 'Stopping server...', '#ff4757');
-            } else if (action === 'start') {
-                statusBadge.innerText = 'ONLINE'; statusBadge.classList.add('badge-online'); playersCount.innerText = '3 / 100';
-                logConsole('SERVER', 'Server started on port 25565!', '#2ecc71');
-            } else if (action === 'restart') {
-                statusBadge.innerText = 'RESTARTING...'; statusBadge.classList.add('badge-process'); restartBtn.classList.add('spinning');
-                logConsole('SERVER', 'Restarting server...', '#f1c40f');
-                setTimeout(() => { triggerAction('start'); }, 2000);
-            }
+            statusBadge.className = 'status-badge'; restartBtn.classList.remove('spinning');
+            if (action === 'stop') { statusBadge.innerText = 'OFFLINE'; statusBadge.classList.add('badge-offline'); playersCount.innerText = '0 / 0'; logConsole('SERVER', 'Stopping server...', '#ff4757'); }
+            else if (action === 'start') { statusBadge.innerText = 'ONLINE'; statusBadge.classList.add('badge-online'); playersCount.innerText = '3 / 100'; logConsole('SERVER', 'Server started on port 25565!', '#2ecc71'); }
+            else if (action === 'restart') { statusBadge.innerText = 'RESTARTING...'; statusBadge.classList.add('badge-process'); restartBtn.classList.add('spinning'); logConsole('SERVER', 'Restarting server...', '#f1c40f'); setTimeout(() => { triggerAction('start'); }, 2000); }
         }
 
-        function logConsole(sender, text, color = '#33ff33') {
-            const time = new Date().toLocaleTimeString();
-            termBox.innerHTML += `<div class="terminal-line" style="color: ${color}">[${time} ${sender}]: ${text}</div>`;
-            termBox.scrollTop = termBox.scrollHeight;
-        }
-
-        function sendConsoleCommand(event) {
-            if (event.key === 'Enter') {
-                const input = document.getElementById('cmd-input');
-                if (input.value.trim() !== "") {
-                    logConsole('ADMIN', input.value, '#ffffff');
-                    input.value = "";
-                }
-            }
-        }
-
+        function logConsole(sender, text, color = '#33ff33') { const time = new Date().toLocaleTimeString(); termBox.innerHTML += `<div class="terminal-line" style="color: ${color}">[${time} ${sender}]: ${text}</div>`; termBox.scrollTop = termBox.scrollHeight; }
+        function sendConsoleCommand(event) { if (event.key === 'Enter') { const input = document.getElementById('cmd-input'); if (input.value.trim() !== "") { logConsole('ADMIN', input.value, '#ffffff'); input.value = ""; } } }
+        
         function kickPlayer(btn, username) {
             if(confirm(`คุณต้องการเตะคุณ ${username} ใช่หรือไม่?`)) {
                 const row = btn.closest('tr'); row.classList.add('player-row-fadeout');
@@ -498,19 +427,8 @@
             }
         }
 
-        function togglePlugin(btn) {
-            if (btn.classList.contains('btn-installed')) {
-                btn.classList.remove('btn-installed'); btn.innerText = 'INSTALL';
-            } else {
-                btn.classList.add('btn-installed'); btn.innerText = 'INSTALLED';
-            }
-        }
-
-        function showToast(message) {
-            const toast = document.getElementById('toast-box');
-            toast.innerText = message; toast.classList.remove('toast-out'); toast.style.display = 'block';
-            setTimeout(() => { toast.classList.add('toast-out'); setTimeout(() => { toast.style.display = 'none'; }, 300); }, 2700);
-        }
+        function togglePlugin(btn) { if (btn.classList.contains('btn-installed')) { btn.classList.remove('btn-installed'); btn.innerText = 'INSTALL'; } else { btn.classList.add('btn-installed'); btn.innerText = 'INSTALLED'; } }
+        function showToast(message) { const toast = document.getElementById('toast-box'); toast.innerText = message; toast.classList.remove('toast-out'); toast.style.display = 'block'; setTimeout(() => { toast.classList.add('toast-out'); setTimeout(() => { toast.style.display = 'none'; }, 300); }, 2700); }
     </script>
 </body>
 </html>
