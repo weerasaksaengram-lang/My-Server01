@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minecraft Server Panel - All-In-One Command Center</title>
+    <title>Minecraft Server Panel - Mods & Resource Packs Center</title>
     <!-- นำเข้า Font และ Icon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Courier+New&display=swap" rel="stylesheet">
@@ -108,7 +108,6 @@
         .tab-content.active > *:nth-child(1) { animation-delay: 0.03s; }
         .tab-content.active > *:nth-child(2) { animation-delay: 0.08s; }
         .tab-content.active > *:nth-child(3) { animation-delay: 0.15s; }
-        .tab-content.active > *:nth-child(4) { animation-delay: 0.22s; }
 
         @keyframes slideUpFade {
             from { opacity: 0; transform: translateY(20px); filter: blur(2px); }
@@ -131,41 +130,22 @@
         .badge-offline { color: #e74c3c; background: rgba(231, 76, 60, 0.1); animation: pulseRed 2s infinite; }
         .badge-process { color: #f1c40f; background: rgba(241, 196, 15, 0.1); animation: pulseYellow 2s infinite; }
         @keyframes pulseGreen { 0% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.4); } 70% { box-shadow: 0 0 0 8px rgba(46, 204, 113, 0); } 100% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0); } }
-        @keyframes pulseRed { 0% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.4); } 70% { box-shadow: 0 0 0 8px rgba(231, 76, 60, 0); } 100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); } }
-        @keyframes pulseYellow { 0% { box-shadow: 0 0 0 0 rgba(241, 196, 15, 0.4); } 70% { box-shadow: 0 0 0 8px rgba(241, 196, 15, 0); } 100% { box-shadow: 0 0 0 0 rgba(241, 196, 15, 0); } }
         
         /* ปุ่มจัดการ */
         .btn-group { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 30px; }
         .btn { padding: 12px 24px; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 10px; color: white; transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1); }
         .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.3); filter: brightness(1.15); }
-        .btn:active { transform: translateY(1px) scale(0.97); }
         .btn-start { background: #27ae60; } .btn-stop { background: #c0392b; } .btn-restart { background: #2980b9; }
         .btn-restart.spinning i { animation: spinFast 1s linear infinite; }
         @keyframes spinFast { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-        /* ==========================================================================
-           ⚡ ครอปจัดแถวแบ่งครึ่ง Console & Players (Command Center Grid)
-           ========================================================================== */
-        .dashboard-split-grid {
-            display: grid;
-            grid-template-columns: 1.2fr 1fr; /* สัดส่วนซ้ายกว้างกว่าขวานิดหน่อยเพื่อความสวยงาม */
-            gap: 25px;
-            align-items: start;
-        }
-        
-        .section-box {
-            background: rgba(15, 23, 42, 0.4);
-            border: 1px solid rgba(255,255,255,0.04);
-            border-radius: 18px;
-            padding: 22px;
-        }
-        .section-subtitle {
-            font-size: 13px; color: #7e8c9f; font-weight: 600; letter-spacing: 0.5px;
-            margin-bottom: 15px; display: flex; align-items: center; gap: 8px; text-transform: uppercase;
-        }
+        /* จัดแถวแบ่งครึ่ง Dashboard Grid */
+        .dashboard-split-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 25px; align-items: start; margin-top: 5px; }
+        .section-box { background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(255,255,255,0.04); border-radius: 18px; padding: 22px; }
+        .section-subtitle { font-size: 13px; color: #7e8c9f; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; text-transform: uppercase; }
         .section-subtitle i { color: #4CAF50; }
 
-        /* สไตล์หน้าต่าง Console */
+        /* Console */
         .terminal { background: #05070f; border-radius: 12px; padding: 15px; height: 320px; overflow-y: auto; font-family: 'Courier New', monospace; font-size: 13px; color: #33ff33; border: 1px solid rgba(255,255,255,0.03); margin-bottom: 12px; }
         .terminal-line { margin-bottom: 5px; line-height: 1.4; animation: logEntry 0.2s ease-out both; }
         @keyframes logEntry { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
@@ -173,40 +153,108 @@
         .terminal-input-group:focus-within { border-color: #33ff33; }
         .terminal-input { background: none; border: none; color: #fff; flex: 1; font-family: 'Courier New', monospace; outline: none; font-size: 13px; }
 
-        /* สไตล์ตารางผู้เล่นออนไลน์ */
-        .table-responsive { width: 100%; height: 377px; overflow-y: auto; } /* คุมความสูงให้เท่ากล่องคอนโซลพอดี */
+        /* Players Table */
+        .table-responsive { width: 100%; height: 377px; overflow-y: auto; }
         .player-table { width: 100%; border-collapse: collapse; }
         .player-table th, .player-table td { padding: 12px 14px; text-align: left; vertical-align: middle; }
         .player-table th { background: rgba(7, 11, 20, 0.4); color: #7e8c9f; font-size: 12px; font-weight: 600; position: sticky; top: 0; z-index: 10; }
         .player-table tr { border-bottom: 1px solid rgba(255,255,255,0.03); }
         .player-table tbody tr:hover { background: rgba(255,255,255,0.02); }
-        
         .player-avatar { width: 32px; height: 32px; border-radius: 6px; image-rendering: pixelated; box-shadow: 0 4px 8px rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); transition: transform 0.3s; }
         .player-table tr:hover .player-avatar { transform: scale(1.15) rotate(5deg); }
-        
         .player-name-wrapper { display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 14px; }
         .heart-effect { color: #ff4757; font-size: 12px; display: inline-block; animation: heartBeat 1.2s infinite cubic-bezier(0.215, 0.610, 0.355, 1); filter: drop-shadow(0 0 4px rgba(255, 71, 87, 0.7)); }
         @keyframes heartBeat { 0%, 80%, 100% { transform: scale(1); } 20%, 60% { transform: scale(1.25); } 40% { transform: scale(1.1); } }
-
         .btn-kick { background: #e67e22; padding: 5px 10px; border: none; color: white; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 600; transition: all 0.2s; }
         .btn-kick:hover { background: #d35400; transform: scale(1.05); }
         .player-row-fadeout { animation: rowFade 0.4s ease forwards; }
         @keyframes rowFade { to { opacity: 0; transform: translateX(40px); display: none; } }
 
-        /* Settings & Plugins */
+        /* Settings Form */
         .settings-form { display: flex; flex-direction: column; gap: 20px; max-width: 600px; }
         .form-group { display: flex; flex-direction: column; gap: 8px; }
         .form-group label { font-size: 13px; color: #7e8c9f; font-weight: 500; }
         .form-group input, .form-group select { background: rgba(20, 32, 55, 0.6); border: 1px solid rgba(255,255,255,0.1); padding: 12px; border-radius: 10px; color: white; outline: none; transition: all 0.3s; }
         .form-group input:focus, .form-group select:focus { border-color: #4CAF50; background: rgba(255,255,255,0.05); box-shadow: 0 0 10px rgba(76, 175, 80, 0.2); }
-        
-        .plugin-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
-        .plugin-card { background: rgba(20, 32, 55, 0.5); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 16px; display: flex; justify-content: space-between; align-items: center; padding: 20px; gap: 15px; transition: all 0.3s ease; }
-        .plugin-card:hover { transform: scale(1.02); background: rgba(255,255,255,0.03); border-color: rgba(255,255,255,0.15); }
-        .plugin-info h4 { margin-bottom: 5px; font-size: 16px; }
-        .plugin-info p { font-size: 12px; color: #7e8c9f; line-height: 1.4; }
-        .btn-install { background: #4CAF50; border: none; color: white; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 13px; flex-shrink: 0; transition: all 0.3s; }
-        .btn-installed { background: rgba(255,255,255,0.1) !important; color: #7e8c9f; }
+
+        /* ==========================================================================
+           📦 🌟 สไตล์ระบบอัปเกรดใหม่: MODS & RESOURCE PACKS UI
+           ========================================================================== */
+        .upload-zone {
+            border: 2px dashed rgba(76, 175, 80, 0.4);
+            background: rgba(20, 32, 55, 0.3);
+            border-radius: 16px;
+            padding: 35px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+        .upload-zone:hover {
+            border-color: #4CAF50;
+            background: rgba(76, 175, 80, 0.08);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(76, 175, 80, 0.1);
+        }
+        .pack-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 330px;
+            overflow-y: auto;
+        }
+        .pack-item {
+            background: rgba(7, 11, 20, 0.4);
+            border: 1px solid rgba(255,255,255,0.03);
+            padding: 14px 18px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: logEntry 0.3s ease-out both;
+        }
+        .pack-item:hover {
+            background: rgba(255,255,255,0.02);
+            border-color: rgba(255,255,255,0.08);
+        }
+        .pack-details {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+        .pack-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .pack-name i { color: #4CAF50; font-size: 13px; }
+        .pack-size {
+            font-size: 11px;
+            color: #7e8c9f;
+            padding-left: 21px;
+        }
+        .btn-delete-pack {
+            background: rgba(231, 76, 60, 0.1);
+            border: 1px solid rgba(231, 76, 60, 0.2);
+            color: #e74c3c;
+            width: 32px; height: 32px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s;
+        }
+        .btn-delete-pack:hover {
+            background: #e74c3c;
+            color: white;
+            transform: scale(1.08);
+        }
 
         /* แจ้งเตือน Toast */
         .toast { position: fixed; bottom: 30px; right: 30px; background: #2ecc71; color: white; padding: 15px 30px; border-radius: 12px; font-weight: 600; box-shadow: 0 15px 30px rgba(0,0,0,0.4); display: none; animation: toastIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.35) forwards; z-index: 99999; }
@@ -215,10 +263,7 @@
         @keyframes toastOut { to { transform: translateY(30px); opacity: 0; } }
 
         /* ตอบสนองหน้าจอ */
-        @media (max-width: 1100px) {
-            .dashboard-split-grid { grid-template-columns: 1fr; }
-            .table-responsive { height: 300px; }
-        }
+        @media (max-width: 1100px) { .dashboard-split-grid { grid-template-columns: 1fr; } .table-responsive { height: 300px; } }
         @media (max-width: 768px) {
             .panel-container { flex-direction: column; }
             .sidebar { width: 100%; height: auto; padding: 20px; gap: 20px; }
@@ -255,7 +300,7 @@
         </div>
     </div>
 
-    <!-- 🖥️ หน้าจอหลักแผงควบคุม (ไซด์บาร์กระชับขึ้น) -->
+    <!-- 🖥️ หน้าจอหลักแผงควบคุม -->
     <div class="panel-container" id="main-panel">
         <aside class="sidebar">
             <div class="sidebar-top">
@@ -263,7 +308,8 @@
                 <ul class="menu-list">
                     <li class="menu-item active" onclick="switchTab('dashboard', this)"><i class="fa-solid fa-chart-pie"></i> Dashboard</li>
                     <li class="menu-item" onclick="switchTab('settings', this)"><i class="fa-solid fa-gear"></i> Settings</li>
-                    <li class="menu-item" onclick="switchTab('plugins', this)"><i class="fa-solid fa-puzzle-piece"></i> Plugins</li>
+                    <!-- เปลี่ยนปุ่มเดิมเป็นเมนูลง Mod & Resource Pack -->
+                    <li class="menu-item" onclick="switchTab('plugins', this)"><i class="fa-solid fa-cubes"></i> Mods & Packs</li>
                 </ul>
             </div>
             <button class="menu-item btn-logout" onclick="handleLogout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
@@ -271,18 +317,16 @@
 
         <main class="content-area">
             
-            <!-- แท็บ 1: DASHBOARD (เวอร์ชันรวมร่างเทพ All-In-One) -->
+            <!-- แท็บ 1: DASHBOARD (ศูนย์ควบคุมรวมศูนย์) -->
             <div id="dashboard" class="tab-content active">
                 <h1 class="tab-title">Server Command Center</h1>
                 
-                <!-- แถวสถิติสถานะ -->
                 <div class="grid-stats">
                     <div class="stat-card"><span class="stat-label">STATUS</span><span id="srv-status" class="status-badge badge-online">ONLINE</span></div>
                     <div class="stat-card"><span class="stat-label">ONLINE PLAYERS</span><span id="srv-players" class="stat-value">3 / 100</span></div>
                     <div class="stat-card"><span class="stat-label">PERFORMANCE</span><span class="stat-value" style="font-size: 16px; color: #e67e22;"><i class="fa-solid fa-microchip"></i> CPU: 18% | <i class="fa-solid fa-memory"></i> RAM: 42%</span></div>
                 </div>
 
-                <!-- แถวปุ่มคำสั่งควบคุม -->
                 <h3 class="stat-label" style="margin-bottom: 12px;">QUICK ACTIONS</h3>
                 <div class="btn-group">
                     <button class="btn btn-start" onclick="triggerAction('start')"><i class="fa-solid fa-play"></i> START</button>
@@ -290,10 +334,8 @@
                     <button id="btn-restart-id" class="btn btn-restart" onclick="triggerAction('restart')"><i class="fa-solid fa-rotate-right"></i> RESTART</button>
                 </div>
 
-                <!-- 💥 รวมร่างแบ่งฝั่งซ้าย-ขวา Console & Players -->
                 <div class="dashboard-split-grid">
-                    
-                    <!-- ส่วน Console (ซ้าย) -->
+                    <!-- Console (ซ้าย) -->
                     <div class="section-box">
                         <h4 class="section-subtitle"><i class="fa-solid fa-terminal"></i> Live Terminal Console</h4>
                         <div class="terminal" id="terminal-box">
@@ -308,7 +350,7 @@
                         </div>
                     </div>
 
-                    <!-- ส่วน Players (ขวา) -->
+                    <!-- Players (ขวา) -->
                     <div class="section-box">
                         <h4 class="section-subtitle"><i class="fa-solid fa-users"></i> Connected Players</h4>
                         <div class="table-responsive">
@@ -339,7 +381,6 @@
                             </table>
                         </div>
                     </div>
-
                 </div>
             </div>
 
@@ -354,13 +395,66 @@
                 </div>
             </div>
 
-            <!-- แท็บ 3: PLUGINS -->
+            <!-- แท็บ 3: MODS & RESOURCE PACKS SYSTEM (ทำใหม่แกะกล่องตามสั่ง) -->
             <div id="plugins" class="tab-content">
-                <h1 class="tab-title">Plugin Marketplace</h1>
-                <div class="plugin-grid">
-                    <div class="plugin-card"><div class="plugin-info"><h4>EssentialsX</h4><p>คำสั่งพื้นฐานจำเป็น /home /spawn /warp</p></div><button class="btn-install" onclick="togglePlugin(this)">INSTALL</button></div>
-                    <div class="plugin-card"><div class="plugin-info"><h4>WorldEdit</h4><p>เครื่องมือสร้างและวางบล็อกเสกแมพขนาดใหญ่</p></div><button class="btn-install" onclick="togglePlugin(this)">INSTALL</button></div>
-                    <div class="plugin-card"><div class="plugin-info"><h4>LuckPerms</h4><p>ระบบจัดการยศและสิทธิ์ผู้เล่นในเซิร์ฟเวอร์</p></div><button class="btn-install" onclick="togglePlugin(this)">INSTALL</button></div>
+                <h1 class="tab-title">Mods & Resource Packs Installer</h1>
+                
+                <!-- โซนอัปโหลดไฟล์จำลองอัจฉริยะ -->
+                <div class="upload-container" style="margin-bottom: 25px;">
+                    <div class="upload-zone" onclick="triggerFileUpload()">
+                        <i class="fa-solid fa-cloud-arrow-up" style="font-size: 38px; color: #4CAF50; margin-bottom: 5px;"></i>
+                        <p style="font-weight: 600; font-size: 15px;">คลิกเพื่อจำลองอัปโหลด Mod (.jar) หรือ รีซอสแพค (.zip)</p>
+                        <span style="font-size: 12px; color: #7e8c9f;">รองรับไฟล์ Mod ของระบบ Forge / Fabric และไฟล์แต่งภาพรีซอสแพคเกม</span>
+                        <!-- ช่องอินพุตไฟล์แบบซ่อนไว้ -->
+                        <input type="file" id="file-input-detector" style="display: none;" accept=".jar,.zip" onchange="simulatePackUpload(event)">
+                    </div>
+                </div>
+
+                <!-- ตารางแบ่งประเภทไฟล์ Mods และ Resource Packs -->
+                <div class="dashboard-split-grid">
+                    
+                    <!-- บล็อกรายชื่อ Mod (.jar) -->
+                    <div class="section-box">
+                        <h4 class="section-subtitle"><i class="fa-solid fa-cube"></i> Installed Server Mods (.jar)</h4>
+                        <ul class="pack-list" id="mods-list-container">
+                            <li class="pack-item">
+                                <div class="pack-details">
+                                    <span class="pack-name"><i class="fa-solid fa-file-code"></i> Sodium-Fabric-v0.5.jar</span>
+                                    <span class="pack-size">2.4 MB</span>
+                                </div>
+                                <button class="btn-delete-pack" onclick="deletePackItem(this, 'Sodium-Fabric-v0.5.jar')"><i class="fa-solid fa-trash"></i></button>
+                            </li>
+                            <li class="pack-item">
+                                <div class="pack-details">
+                                    <span class="pack-name"><i class="fa-solid fa-file-code"></i> Iris-Shaders-v1.6.jar</span>
+                                    <span class="pack-size">1.8 MB</span>
+                                </div>
+                                <button class="btn-delete-pack" onclick="deletePackItem(this, 'Iris-Shaders-v1.6.jar')"><i class="fa-solid fa-trash"></i></button>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- บล็อกรายชื่อ Resource Pack (.zip) -->
+                    <div class="section-box">
+                        <h4 class="section-subtitle"><i class="fa-solid fa-file-zipper"></i> Server Resource Packs (.zip)</h4>
+                        <ul class="pack-list" id="packs-list-container">
+                            <li class="pack-item">
+                                <div class="pack-details">
+                                    <span class="pack-name"><i class="fa-solid fa-image"></i> Faithful-32x-Minecraft.zip</span>
+                                    <span class="pack-size">15.4 MB</span>
+                                </div>
+                                <button class="btn-delete-pack" onclick="deletePackItem(this, 'Faithful-32x-Minecraft.zip')"><i class="fa-solid fa-trash"></i></button>
+                            </li>
+                            <li class="pack-item">
+                                <div class="pack-details">
+                                    <span class="pack-name"><i class="fa-solid fa-image"></i> BareBones-TexturePack.zip</span>
+                                    <span class="pack-size">3.9 MB</span>
+                                </div>
+                                <button class="btn-delete-pack" onclick="deletePackItem(this, 'BareBones-TexturePack.zip')"><i class="fa-solid fa-trash"></i></button>
+                            </li>
+                        </ul>
+                    </div>
+
                 </div>
             </div>
         </main>
@@ -427,7 +521,71 @@
             }
         }
 
-        function togglePlugin(btn) { if (btn.classList.contains('btn-installed')) { btn.classList.remove('btn-installed'); btn.innerText = 'INSTALL'; } else { btn.classList.add('btn-installed'); btn.innerText = 'INSTALLED'; } }
+        /* ==========================================================================
+           ⚙️ ฟังก์ชันระบบ Mod & Resource Packs JavaScript
+           ========================================================================== */
+        function triggerFileUpload() {
+            document.getElementById('file-input-detector').click();
+        }
+
+        function simulatePackUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const name = file.name;
+            const ext = name.split('.').pop().toLowerCase();
+            const sizeStr = (file.size / (1024 * 1024)).toFixed(1) + " MB";
+
+            if (ext === 'jar') {
+                // จำลองเพิ่มเข้าช่องเด็ค Mods
+                const modsContainer = document.getElementById('mods-list-container');
+                modsContainer.innerHTML += `
+                    <li class="pack-item">
+                        <div class="pack-details">
+                            <span class="pack-name"><i class="fa-solid fa-file-code"></i> ${name}</span>
+                            <span class="pack-size">${sizeStr}</span>
+                        </div>
+                        <button class="btn-delete-pack" onclick="deletePackItem(this, '${name}')"><i class="fa-solid fa-trash"></i></button>
+                    </li>
+                `;
+                logConsole('FTP-UPLOAD', `Successfully uploaded Mod file: ${name} (${sizeStr})`, '#2ecc71');
+                showToast(`🚀 ติดตั้ง Mod: ${name} สำเร็จ!`);
+            } 
+            else if (ext === 'zip') {
+                // จำลองเพิ่มเข้าช่องรีซอสแพค
+                const packsContainer = document.getElementById('packs-list-container');
+                packsContainer.innerHTML += `
+                    <li class="pack-item">
+                        <div class="pack-details">
+                            <span class="pack-name"><i class="fa-solid fa-image"></i> ${name}</span>
+                            <span class="pack-size">${sizeStr}</span>
+                        </div>
+                        <button class="btn-delete-pack" onclick="deletePackItem(this, '${name}')"><i class="fa-solid fa-trash"></i></button>
+                    </li>
+                `;
+                logConsole('FTP-UPLOAD', `Successfully uploaded Resource Pack: ${name} (${sizeStr})`, '#2ecc71');
+                showToast(`🎨 โหลดรีซอสแพค: ${name} สำเร็จ!`);
+            } 
+            else {
+                showToast('❌ ผิดพลาด! ระบบรองรับเฉพาะ .jar (Mod) และ .zip (Resource Pack)');
+            }
+
+            // ล้างค่าอินพุตเพื่อให้กดเลือกซ้ำได้
+            event.target.value = '';
+        }
+
+        function deletePackItem(button, fileName) {
+            if (confirm(`คุณต้องการลบไฟล์ ${fileName} ออกจากเซิร์ฟเวอร์หรือไม่?`)) {
+                const item = button.closest('li');
+                item.style.animation = 'rowFade 0.3s ease forwards';
+                setTimeout(() => {
+                    item.remove();
+                    logConsole('FTP-DELETE', `Removed file: ${fileName}`, '#e74c3c');
+                    showToast(`ลบไฟล์ ${fileName} เรียบร้อยแล้ว`);
+                }, 300);
+            }
+        }
+
         function showToast(message) { const toast = document.getElementById('toast-box'); toast.innerText = message; toast.classList.remove('toast-out'); toast.style.display = 'block'; setTimeout(() => { toast.classList.add('toast-out'); setTimeout(() => { toast.style.display = 'none'; }, 300); }, 2700); }
     </script>
 </body>
